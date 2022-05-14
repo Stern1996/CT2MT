@@ -2,7 +2,7 @@
 
 效果图：
 
-![Image text](https://github.com/Stern1996/CT2MT/function.jpg)
+![Image text](function.jpg)
 
 本程序可基于CT数据计算一个三维体的所有线性独立的Minkowski张量，最高阶数为2。用于计算的CT数据应保存在一个标准的tiff文件中。
 
