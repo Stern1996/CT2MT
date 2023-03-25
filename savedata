@@ -87,20 +87,18 @@ etcdctl --endpoints https://new_ip:2379 \
   - targets:
       - 10.40.128.10
     labels:
-      product: mmm
       role: jobmanager
       host: 10.40.128.10
-      __path__: /opt/FLINKAPP/*/*application*
+      __path__: /opt/FLINKAPP/*application*
   - targets:
       - 10.40.128.10
     labels:
-      product: mmm
       role: taskmanager
       host: 10.40.128.10
-      __path__: /opt/FLINKAPP/*/*taskmanager*
+      __path__: /opt/FLINKAPP/*taskmanager*
   relabel_configs:
   - source_labels: [__path__]
-    regex: /opt/FLINKAPP/(.*)/*taskmanager*
-    replacement: '${1}'
+    regex: /opt/FLINKAPP/[\w+]--[\w+]-[\w+]-[\d+]-(.*)-[.*]
+    replacement: ${1}
     target_label: product
     action: replace
