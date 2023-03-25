@@ -74,3 +74,33 @@ etcdctl --endpoints https://new_ip:2379 \
 其中，`--endpoints`参数和`--ca-file`参数同样指定集群的地址和证书信息。`snapshot restore`命令指定要从哪个备份文件中恢复数据。`--name`参数指定该节点的名称，`--initial-cluster`参数指定新集群的成员节点和地址信息。
 
 需要注意的是，Rqlite和Etcd的数据迁移操作较为复杂，建议在执行迁移操作之前仔细阅读官方文档，并进行必要的备份和恢复测试。
+
+- job_name: 'zzx'
+  pipeline_stages:
+  - multiline:
+      firstline: "^[\\d-]+\\s{1}[\\d:,]+\\s{1}"
+  - regex:
+      expression: "^(?s)(?P<time>[\\d-]+\\s{1}[\\d:,]+) (?P<level>\\S+)\\s* (?P<content>.*)$"
+  - labels:
+      level:
+  static_configs:
+  - targets:
+      - 10.40.128.10
+    labels:
+      product: mmm
+      role: jobmanager
+      host: 10.40.128.10
+      __path__: /opt/FLINKAPP/*/*application*
+  - targets:
+      - 10.40.128.10
+    labels:
+      product: mmm
+      role: taskmanager
+      host: 10.40.128.10
+      __path__: /opt/FLINKAPP/*/*taskmanager*
+  relabel_configs:
+  - source_labels: [__path__]
+    regex: /opt/FLINKAPP/(.*)/*taskmanager*
+    replacement: '${1}'
+    target_label: product
+    action: replace
